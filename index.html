@@ -1,0 +1,1186 @@
+```html
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KOTAK AJAIB: SIHAT DAN GEMBIRA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Fredoka', 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #a8ebe6 0%, #a1c4fd 50%, #c2e9fb 100%);
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        /* Animated Floating Particles */
+        .bg-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+            animation: floatUp 8s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.3) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.1) rotate(360deg); opacity: 0; }
+        }
+
+        /* 3D Box Glow & Floating Effect */
+        .box-3d {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+
+        .box-3d:hover {
+            transform: translateY(-12px) scale(1.05) rotateX(8deg);
+            filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.25));
+        }
+
+        /* Pulse Animation */
+        .pulse-glow {
+            animation: pulseGlow 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6)); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 30px rgba(255, 215, 0, 1)); transform: scale(1.03); }
+        }
+
+        /* Star Avatar Floating & Mouth Speaking Animation */
+        .star-float {
+            animation: starFloat 3s infinite ease-in-out;
+        }
+
+        @keyframes starFloat {
+            0%, 100% { transform: translateY(0px) rotate(-3deg); }
+            50% { transform: translateY(-12px) rotate(3deg); }
+        }
+
+        .speaking-mouth {
+            animation: mouthTalk 0.25s infinite alternate;
+        }
+
+        @keyframes mouthTalk {
+            0% { rx: 8; ry: 3; }
+            100% { rx: 5; ry: 10; }
+        }
+
+        /* Custom Glassmorphic Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 4px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 15px 35px rgba(31, 38, 135, 0.15);
+        }
+
+        /* Custom Confetti Effect */
+        .confetti-piece {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            top: -20px;
+            animation: confettiFall 4s ease-in-out infinite;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between items-center p-3 md:p-6 text-slate-800 relative select-none">
+
+    <!-- Floating Background Particles Container -->
+    <div id="particle-container" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- Header Controls (Audio Toggles & Audio Status) -->
+    <header class="w-full max-w-5xl flex justify-between items-center z-20 mb-2">
+        <div class="flex items-center space-x-2 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border-2 border-amber-300 shadow-md">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-500 text-xl animate-spin" style="animation-duration: 6s;"></i>
+            <span class="font-bold text-amber-700 text-sm md:text-base tracking-wide">Set Induksi BM Tahun 2</span>
+        </div>
+
+        <div class="flex space-x-2">
+            <button id="btn-bgm" onclick="toggleBGM()" class="bg-amber-400 hover:bg-amber-500 text-white p-3 rounded-full shadow-lg border-2 border-white transition-all transform hover:scale-110 active:scale-95" title="Muzik Latar">
+                <i class="fa-solid fa-music text-lg"></i>
+            </button>
+            <button id="btn-tts" onclick="toggleTTS()" class="bg-sky-400 hover:bg-sky-500 text-white p-3 rounded-full shadow-lg border-2 border-white transition-all transform hover:scale-110 active:scale-95" title="Suara Panduan">
+                <i class="fa-solid fa-volume-high text-lg"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="w-full max-w-4xl flex-1 flex flex-col justify-center items-center z-10 my-2">
+
+        <!-- ================= SCREEN 1: SELAMAT DATANG ================= -->
+        <section id="screen-1" class="w-full flex flex-col items-center text-center space-y-6">
+            <!-- Title Header -->
+            <div class="space-y-2">
+                <span class="bg-pink-500 text-white font-bold text-xs md:text-sm px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md">Modul Pengajaran Interaktif</span>
+                <h1 class="text-3xl md:text-5xl font-extrabold text-indigo-900 drop-shadow-md tracking-wide mt-2">
+                    KOTAK AJAIB: <span class="text-pink-600">SIHAT DAN GEMBIRA</span>
+                </h1>
+            </div>
+
+            <!-- Central Floating 3D Gift Box Animation -->
+            <div class="relative cursor-pointer pulse-glow group" onclick="startAdventure()">
+                <svg class="w-56 h-56 md:w-72 md:h-72 box-3d drop-shadow-2xl" viewBox="0 0 200 200">
+                    <defs>
+                        <linearGradient id="boxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#FF5E7E"/>
+                            <stop offset="100%" stop-color="#FF2A55"/>
+                        </linearGradient>
+                        <linearGradient id="lidGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#FF859C"/>
+                            <stop offset="100%" stop-color="#FF5E7E"/>
+                        </linearGradient>
+                        <linearGradient id="ribbonGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#FFE066"/>
+                            <stop offset="100%" stop-color="#FFB703"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Shadow Base -->
+                    <ellipse cx="100" cy="180" rx="70" ry="15" fill="rgba(0,0,0,0.15)"/>
+                    <!-- Box Body -->
+                    <rect x="40" y="80" width="120" height="90" rx="16" fill="url(#boxGrad)"/>
+                    <!-- Vertical Ribbon -->
+                    <rect x="85" y="80" width="30" height="90" fill="url(#ribbonGrad)"/>
+                    <!-- Box Lid -->
+                    <rect x="30" y="60" width="140" height="30" rx="10" fill="url(#lidGrad)"/>
+                    <!-- Lid Ribbon -->
+                    <rect x="85" y="60" width="30" height="30" fill="url(#ribbonGrad)"/>
+                    <!-- Ribbon Bow Left -->
+                    <path d="M70 45 C 40 20, 70 60, 85 60 C 85 60, 70 35, 70 45 Z" fill="url(#ribbonGrad)"/>
+                    <!-- Ribbon Bow Right -->
+                    <path d="M130 45 C 160 20, 130 60, 115 60 C 115 60, 130 35, 130 45 Z" fill="url(#ribbonGrad)"/>
+                    <!-- Ribbon Knot -->
+                    <circle cx="100" cy="58" r="10" fill="#FFE066"/>
+                    <!-- Sparkles -->
+                    <path d="M30 40 L35 45 L30 50 L25 45 Z" fill="#FFE066" class="animate-ping"/>
+                    <path d="M170 120 L175 125 L170 130 L165 125 Z" fill="#FFE066" class="animate-ping" style="animation-delay: 0.5s;"/>
+                </svg>
+            </div>
+
+            <button onclick="startAdventure()" class="px-8 py-4 bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-500 hover:to-teal-600 text-white font-extrabold text-xl md:text-2xl rounded-full shadow-xl hover:shadow-2xl border-4 border-white transition-all transform hover:scale-105 active:scale-95 flex items-center space-x-3">
+                <span>MULA PENGEMBARAAN</span>
+                <i class="fa-solid fa-circle-play text-2xl"></i>
+            </button>
+        </section>
+
+        <!-- ================= SCREEN 2: PILIH KOTAK AJAIB ================= -->
+        <section id="screen-2" class="w-full hidden flex-col items-center space-y-6">
+            <!-- Progress Bar & Title -->
+            <div class="w-full max-w-md bg-white/70 rounded-full p-2 border-2 border-white shadow-inner flex items-center space-x-3">
+                <div class="flex-1 bg-gray-200 h-5 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-yellow-400 h-full w-0 transition-all duration-500"></div>
+                </div>
+                <span id="progress-text" class="font-bold text-indigo-900 text-sm">0/5 Kotak</span>
+            </div>
+
+            <h2 class="text-2xl md:text-3xl font-extrabold text-indigo-900 text-center">Pilih Satu Kotak Ajaib!</h2>
+
+            <!-- 5 Grid Gift Boxes -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-6 w-full max-w-3xl px-2">
+                <!-- Box 1 -->
+                <div id="box-card-1" onclick="openBoxDetail(1)" class="box-3d cursor-pointer glass-card rounded-2xl p-4 flex flex-col items-center justify-center relative border-4 border-pink-300 hover:border-pink-500">
+                    <div id="badge-1" class="hidden absolute -top-3 -right-3 bg-amber-400 text-white p-2 rounded-full shadow-lg border-2 border-white">
+                        <i class="fa-solid fa-star text-lg"></i>
+                    </div>
+                    <svg class="w-24 h-24 my-2" viewBox="0 0 100 100">
+                        <rect x="20" y="40" width="60" height="45" rx="8" fill="#FF6B6B"/>
+                        <rect x="42" y="40" width="16" height="45" fill="#FFE66D"/>
+                        <rect x="15" y="30" width="70" height="15" rx="5" fill="#FF8E8E"/>
+                        <rect x="42" y="30" width="16" height="15" fill="#FFE66D"/>
+                        <circle cx="50" cy="28" r="6" fill="#FFE66D"/>
+                    </svg>
+                    <span class="font-extrabold text-xl text-pink-600 bg-pink-100 px-4 py-1 rounded-full border border-pink-300">Kotak 1</span>
+                </div>
+
+                <!-- Box 2 -->
+                <div id="box-card-2" onclick="openBoxDetail(2)" class="box-3d cursor-pointer glass-card rounded-2xl p-4 flex flex-col items-center justify-center relative border-4 border-sky-300 hover:border-sky-500">
+                    <div id="badge-2" class="hidden absolute -top-3 -right-3 bg-amber-400 text-white p-2 rounded-full shadow-lg border-2 border-white">
+                        <i class="fa-solid fa-star text-lg"></i>
+                    </div>
+                    <svg class="w-24 h-24 my-2" viewBox="0 0 100 100">
+                        <rect x="20" y="40" width="60" height="45" rx="8" fill="#4ECDC4"/>
+                        <rect x="42" y="40" width="16" height="45" fill="#FFE66D"/>
+                        <rect x="15" y="30" width="70" height="15" rx="5" fill="#72E0D8"/>
+                        <rect x="42" y="30" width="16" height="15" fill="#FFE66D"/>
+                        <circle cx="50" cy="28" r="6" fill="#FFE66D"/>
+                    </svg>
+                    <span class="font-extrabold text-xl text-teal-700 bg-teal-100 px-4 py-1 rounded-full border border-teal-300">Kotak 2</span>
+                </div>
+
+                <!-- Box 3 -->
+                <div id="box-card-3" onclick="openBoxDetail(3)" class="box-3d cursor-pointer glass-card rounded-2xl p-4 flex flex-col items-center justify-center relative border-4 border-emerald-300 hover:border-emerald-500">
+                    <div id="badge-3" class="hidden absolute -top-3 -right-3 bg-amber-400 text-white p-2 rounded-full shadow-lg border-2 border-white">
+                        <i class="fa-solid fa-star text-lg"></i>
+                    </div>
+                    <svg class="w-24 h-24 my-2" viewBox="0 0 100 100">
+                        <rect x="20" y="40" width="60" height="45" rx="8" fill="#A8E6CF"/>
+                        <rect x="42" y="40" width="16" height="45" fill="#FF8B94"/>
+                        <rect x="15" y="30" width="70" height="15" rx="5" fill="#DCEDC1"/>
+                        <rect x="42" y="30" width="16" height="15" fill="#FF8B94"/>
+                        <circle cx="50" cy="28" r="6" fill="#FF8B94"/>
+                    </svg>
+                    <span class="font-extrabold text-xl text-emerald-700 bg-emerald-100 px-4 py-1 rounded-full border border-emerald-300">Kotak 3</span>
+                </div>
+
+                <!-- Box 4 -->
+                <div id="box-card-4" onclick="openBoxDetail(4)" class="box-3d cursor-pointer glass-card rounded-2xl p-4 flex flex-col items-center justify-center relative border-4 border-purple-300 hover:border-purple-500">
+                    <div id="badge-4" class="hidden absolute -top-3 -right-3 bg-amber-400 text-white p-2 rounded-full shadow-lg border-2 border-white">
+                        <i class="fa-solid fa-star text-lg"></i>
+                    </div>
+                    <svg class="w-24 h-24 my-2" viewBox="0 0 100 100">
+                        <rect x="20" y="40" width="60" height="45" rx="8" fill="#D4A5A5"/>
+                        <rect x="42" y="40" width="16" height="45" fill="#FFE66D"/>
+                        <rect x="15" y="30" width="70" height="15" rx="5" fill="#E8A7A7"/>
+                        <rect x="42" y="30" width="16" height="15" fill="#FFE66D"/>
+                        <circle cx="50" cy="28" r="6" fill="#FFE66D"/>
+                    </svg>
+                    <span class="font-extrabold text-xl text-purple-700 bg-purple-100 px-4 py-1 rounded-full border border-purple-300">Kotak 4</span>
+                </div>
+
+                <!-- Box 5 -->
+                <div id="box-card-5" onclick="openBoxDetail(5)" class="box-3d cursor-pointer glass-card rounded-2xl p-4 flex flex-col items-center justify-center relative border-4 border-amber-300 hover:border-amber-500 col-span-2 md:col-span-1">
+                    <div id="badge-5" class="hidden absolute -top-3 -right-3 bg-amber-400 text-white p-2 rounded-full shadow-lg border-2 border-white">
+                        <i class="fa-solid fa-star text-lg"></i>
+                    </div>
+                    <svg class="w-24 h-24 my-2" viewBox="0 0 100 100">
+                        <rect x="20" y="40" width="60" height="45" rx="8" fill="#FFD97D"/>
+                        <rect x="42" y="40" width="16" height="45" fill="#6C5CE7"/>
+                        <rect x="15" y="30" width="70" height="15" rx="5" fill="#FFE08A"/>
+                        <rect x="42" y="30" width="16" height="15" fill="#6C5CE7"/>
+                        <circle cx="50" cy="28" r="6" fill="#6C5CE7"/>
+                    </svg>
+                    <span class="font-extrabold text-xl text-amber-700 bg-amber-100 px-4 py-1 rounded-full border border-amber-300">Kotak 5</span>
+                </div>
+            </div>
+
+            <!-- Complete Button (Shown after all 5 opened) -->
+            <button id="btn-reveal-finale" onclick="goToFinale()" class="hidden px-8 py-4 bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white font-extrabold text-2xl rounded-full shadow-2xl border-4 border-white transition-all transform hover:scale-105 active:scale-95 pulse-glow">
+                <span>RAHSIA TERBONGKAR!</span>
+                <i class="fa-solid fa-key ml-2"></i>
+            </button>
+        </section>
+
+        <!-- ================= SCREEN 3: RAHSIA KOTAK AJAIB ================= -->
+        <section id="screen-3" class="w-full hidden flex-col items-center space-y-4">
+            <div class="glass-card rounded-3xl p-4 md:p-6 w-full max-w-2xl flex flex-col items-center text-center space-y-4 border-4 border-white">
+                <!-- Title Indicator -->
+                <div class="flex items-center justify-between w-full border-b-2 border-slate-200 pb-2">
+                    <span id="detail-box-title" class="font-extrabold text-xl md:text-2xl text-pink-600">RAHSIA KOTAK 1</span>
+                    <span class="text-xs bg-indigo-100 text-indigo-700 font-bold px-3 py-1 rounded-full">Set Induksi</span>
+                </div>
+
+                <!-- High-definition 3D SVG Illustration Box -->
+                <div id="illustration-container" class="w-full h-56 md:h-64 bg-gradient-to-b from-sky-100 to-indigo-50 rounded-2xl flex items-center justify-center p-2 shadow-inner border-2 border-indigo-100 relative overflow-hidden">
+                    <!-- Dynamic SVG inserted via JS -->
+                </div>
+
+                <!-- Audio Interactive Buttons -->
+                <div class="flex flex-wrap justify-center gap-3 w-full">
+                    <button onclick="speakQuestion()" class="flex-1 min-w-[140px] px-4 py-3 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl shadow-md border-2 border-white transition transform active:scale-95 flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-circle-question text-lg"></i>
+                        <span>Dengar Soalan</span>
+                    </button>
+
+                    <button id="btn-show-answer" onclick="revealAnswer()" class="flex-1 min-w-[140px] px-4 py-3 bg-amber-400 hover:bg-amber-500 text-white font-bold rounded-xl shadow-md border-2 border-white transition transform active:scale-95 flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-eye text-lg"></i>
+                        <span>Lihat Jawapan</span>
+                    </button>
+
+                    <button id="btn-speak-answer" onclick="speakAnswer()" class="hidden flex-1 min-w-[140px] px-4 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl shadow-md border-2 border-white transition transform active:scale-95 items-center justify-center space-x-2">
+                        <i class="fa-solid fa-volume-low text-lg"></i>
+                        <span>Dengar Jawapan</span>
+                    </button>
+                </div>
+
+                <!-- Answer Text Display -->
+                <div id="answer-box" class="hidden w-full bg-emerald-100 border-2 border-emerald-400 p-3 rounded-xl text-emerald-900 font-extrabold text-lg md:text-xl animate-bounce">
+                    <span id="answer-text">Memberus Gigi</span>
+                </div>
+
+                <!-- Back to Boxes Grid Button -->
+                <button onclick="backToGrid()" class="mt-2 px-6 py-2.5 bg-slate-600 hover:bg-slate-700 text-white font-bold rounded-full shadow-lg border-2 border-white transition transform active:scale-95 flex items-center space-x-2">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Kembali ke Kotak</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= SCREEN 4: RAHSIA TERBONGKAR! (FINALE) ================= -->
+        <section id="screen-4" class="w-full hidden flex-col items-center text-center space-y-6 relative">
+            <div class="glass-card rounded-3xl p-6 md:p-8 w-full max-w-3xl flex flex-col items-center space-y-6 border-4 border-yellow-300 shadow-2xl">
+                <!-- Celebration Header -->
+                <div class="space-y-2">
+                    <span class="bg-amber-400 text-white font-extrabold text-sm px-4 py-1.5 rounded-full uppercase shadow-md animate-pulse">Tahniah! Semua Kotak Telah Dibuka</span>
+                    <h2 class="text-3xl md:text-5xl font-black text-indigo-900 drop-shadow-md">
+                        TAJUK PELAJARAN HARI INI:
+                    </h2>
+                </div>
+
+                <!-- Big Main Topic Reveal Badge -->
+                <div class="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 text-white py-6 px-4 rounded-3xl shadow-2xl border-4 border-yellow-300 transform rotate-1 scale-105 transition">
+                    <h3 class="text-3xl md:text-5xl font-black tracking-wider drop-shadow-lg animate-pulse">
+                        "SIHAT DAN GEMBIRA"
+                    </h3>
+                </div>
+
+                <!-- Review Grid of 5 Habits -->
+                <div class="grid grid-cols-5 gap-2 md:gap-3 w-full">
+                    <div class="bg-white/80 p-2 rounded-xl border border-pink-300 flex flex-col items-center">
+                        <span class="text-xs font-bold text-pink-600">1. Gigi</span>
+                        <i class="fa-solid fa-tooth text-pink-500 text-xl my-1"></i>
+                    </div>
+                    <div class="bg-white/80 p-2 rounded-xl border border-sky-300 flex flex-col items-center">
+                        <span class="text-xs font-bold text-sky-600">2. Tangan</span>
+                        <i class="fa-solid fa-hands-bubbles text-sky-500 text-xl my-1"></i>
+                    </div>
+                    <div class="bg-white/80 p-2 rounded-xl border border-emerald-300 flex flex-col items-center">
+                        <span class="text-xs font-bold text-emerald-600">3. Senam</span>
+                        <i class="fa-solid fa-child-reaching text-emerald-500 text-xl my-1"></i>
+                    </div>
+                    <div class="bg-white/80 p-2 rounded-xl border border-purple-300 flex flex-col items-center">
+                        <span class="text-xs font-bold text-purple-600">4. Buah</span>
+                        <i class="fa-solid fa-apple-whole text-purple-500 text-xl my-1"></i>
+                    </div>
+                    <div class="bg-white/80 p-2 rounded-xl border border-amber-300 flex flex-col items-center">
+                        <span class="text-xs font-bold text-amber-600">5. Air</span>
+                        <i class="fa-solid fa-glass-water text-amber-500 text-xl my-1"></i>
+                    </div>
+                </div>
+
+                <!-- Reset Button -->
+                <button onclick="restartApp()" class="px-8 py-3.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-extrabold text-xl rounded-full shadow-xl border-4 border-white transition transform hover:scale-105 active:scale-95 flex items-center space-x-2">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>MULA SEMULA</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- STAR GUIDE AVATAR & SUBTITLE BAR (CASPER UI) -->
+    <footer class="w-full max-w-3xl z-20 mt-2">
+        <div class="bg-white/90 backdrop-blur-md rounded-2xl p-3 md:p-4 border-4 border-amber-300 shadow-xl flex items-center space-x-3 md:space-x-4 relative">
+            <!-- Floating Star Avatar -->
+            <div class="relative flex-shrink-0 star-float">
+                <svg class="w-16 h-16 md:w-20 md:h-20 drop-shadow-md" viewBox="0 0 100 100">
+                    <defs>
+                        <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#FFEA75"/>
+                            <stop offset="100%" stop-color="#FFB703"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Star Shape -->
+                    <polygon points="50,5 64,32 95,38 73,61 78,92 50,77 22,92 27,61 5,38 36,32" fill="url(#starGrad)" stroke="#FB8500" stroke-width="3"/>
+                    <!-- Cute Eyes -->
+                    <circle cx="38" cy="42" r="5" fill="#2B2D42"/>
+                    <circle cx="62" cy="42" r="5" fill="#2B2D42"/>
+                    <circle cx="40" cy="40" r="2" fill="#FFF"/>
+                    <circle cx="64" cy="40" r="2" fill="#FFF"/>
+                    <!-- Cheeks -->
+                    <ellipse cx="30" cy="50" rx="4" ry="2" fill="#FFB4A2"/>
+                    <ellipse cx="70" cy="50" rx="4" ry="2" fill="#FFB4A2"/>
+                    <!-- Animated Mouth -->
+                    <ellipse id="star-mouth" cx="50" cy="54" rx="7" ry="3" fill="#D90429"/>
+                </svg>
+            </div>
+
+            <!-- Subtitle Text Container -->
+            <div class="flex-1 bg-amber-50/80 rounded-xl p-3 border border-amber-200 min-h-[60px] flex items-center">
+                <p id="subtitle-text" class="text-indigo-950 font-bold text-sm md:text-base leading-snug">
+                    Selamat datang! Mari kita terokai Kotak Ajaib Sihat dan Gembira bersama-sama!
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Data Configuration for 5 Habits
+        const habitData = {
+            1: {
+                title: "RAHSIA KOTAK 1",
+                question: "Apakah amalan kebersihan diri yang ditunjukkan dalam gambar ini?",
+                answer: "Memberus Gigi",
+                speechQuestion: "Apakah amalan kebersihan diri yang ditunjukkan dalam gambar ini?",
+                speechAnswer: "Jawapannya ialah, memberus gigi!",
+                svg: `
+                <svg class="w-full h-full" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="bgGigi" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E0F7FA"/><stop offset="100%" stop-color="#B2EBF2"/></linearGradient>
+                        <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFDFC4"/><stop offset="100%" stop-color="#F0C097"/></linearGradient>
+                        <linearGradient id="shirt" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FF6B6B"/><stop offset="100%" stop-color="#EE5253"/></linearGradient>
+                    </defs>
+                    <!-- Background Wall & Bathroom Mirror Frame -->
+                    <rect width="400" height="260" rx="20" fill="url(#bgGigi)"/>
+                    <rect x="20" y="20" width="360" height="220" rx="15" fill="#FFFFFF" opacity="0.4"/>
+                    
+                    <!-- Bathroom Sink Counter Edge -->
+                    <rect x="0" y="210" width="400" height="50" fill="#B0BEC5"/>
+                    <rect x="0" y="210" width="400" height="8" fill="#CFD8DC"/>
+                    
+                    <!-- Toothpaste Tube on Counter -->
+                    <rect x="30" y="190" width="45" height="18" rx="4" fill="#48DBFB" transform="rotate(-12 30 190)"/>
+                    <rect x="70" y="184" width="8" height="12" fill="#2E86DE" transform="rotate(-12 30 190)"/>
+                    <path d="M 33 195 L 45 192 L 45 204 L 33 201 Z" fill="#FFFFFF" opacity="0.6"/>
+                    <text x="35" y="200" font-size="7" fill="#10AC84" font-weight="bold" transform="rotate(-12 30 190)">UBAT GIGI</text>
+                    
+                    <!-- Cute Child (Head & Neck) -->
+                    <rect x="185" y="145" width="30" height="30" fill="url(#skin)"/>
+                    <!-- Shirt/Shoulders -->
+                    <path d="M 130 220 C 130 170, 270 170, 270 220 Z" fill="url(#shirt)"/>
+                    <!-- Collar -->
+                    <path d="M 185 175 L 200 190 L 215 175 Z" fill="#FFFFFF"/>
+                    
+                    <!-- Head -->
+                    <circle cx="200" cy="115" r="50" fill="url(#skin)"/>
+                    <!-- Ears -->
+                    <circle cx="148" cy="115" r="10" fill="url(#skin)"/>
+                    <circle cx="252" cy="115" r="10" fill="url(#skin)"/>
+                    <!-- Hair -->
+                    <path d="M 150 110 C 145 60, 255 60, 250 110 C 240 75, 160 75, 150 110 Z" fill="#2C3E50"/>
+                    <path d="M 170 75 Q 185 88 200 75 Q 215 88 230 75 Q 200 60 170 75 Z" fill="#2C3E50"/>
+                    
+                    <!-- Big Happy Eyes -->
+                    <ellipse cx="178" cy="108" rx="6" ry="8" fill="#2C3E50"/>
+                    <ellipse cx="222" cy="108" rx="6" ry="8" fill="#2C3E50"/>
+                    <circle cx="176" cy="105" r="2.5" fill="#FFFFFF"/>
+                    <circle cx="220" cy="105" r="2.5" fill="#FFFFFF"/>
+                    <!-- Eyebrows -->
+                    <path d="M 170 95 Q 178 90 186 95" stroke="#2C3E50" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <path d="M 214 95 Q 222 90 230 95" stroke="#2C3E50" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <!-- Cheeks -->
+                    <ellipse cx="165" cy="120" rx="8" ry="5" fill="#FF8585" opacity="0.6"/>
+                    <ellipse cx="235" cy="120" rx="8" ry="5" fill="#FF8585" opacity="0.6"/>
+                    
+                    <!-- Open Mouth & Clean White Teeth -->
+                    <path d="M 175 126 Q 200 150 225 126 Z" fill="#C0392B"/>
+                    <!-- Upper Teeth -->
+                    <path d="M 177 126 Q 200 133 223 126 L 221 134 Q 200 140 179 134 Z" fill="#FFFFFF" stroke="#BDC3C7" stroke-width="1"/>
+                    <line x1="192" y1="128" x2="192" y2="136" stroke="#BDC3C7" stroke-width="1"/>
+                    <line x1="200" y1="129" x2="200" y2="137" stroke="#BDC3C7" stroke-width="1"/>
+                    <line x1="208" y1="128" x2="208" y2="136" stroke="#BDC3C7" stroke-width="1"/>
+                    <!-- Tongue -->
+                    <path d="M 188 142 Q 200 135 212 142 Q 200 150 188 142 Z" fill="#FF7675"/>
+                    
+                    <!-- Child's Hand Holding Toothbrush -->
+                    <!-- Toothbrush Handle -->
+                    <path d="M 280 180 L 195 132" stroke="#10AC84" stroke-width="12" stroke-linecap="round"/>
+                    <path d="M 280 180 L 195 132" stroke="#1DE9B6" stroke-width="6" stroke-linecap="round"/>
+                    <!-- Brush Head & Bristles -->
+                    <rect x="182" y="124" width="20" height="10" rx="3" fill="#FFFFFF" transform="rotate(29 182 124)"/>
+                    <rect x="180" y="122" width="18" height="6" fill="#10AC84" transform="rotate(29 182 124)"/>
+                    
+                    <!-- Hand Clasping Brush -->
+                    <circle cx="260" cy="170" r="15" fill="url(#skin)"/>
+                    <circle cx="253" cy="162" r="6" fill="url(#skin)"/>
+                    <circle cx="260" cy="160" r="6" fill="url(#skin)"/>
+                    <circle cx="267" cy="163" r="6" fill="url(#skin)"/>
+                    
+                    <!-- Foam & Toothpaste Bubbles -->
+                    <circle cx="175" cy="130" r="9" fill="#FFFFFF" opacity="0.95"/>
+                    <circle cx="188" cy="138" r="12" fill="#FFFFFF" opacity="0.95"/>
+                    <circle cx="205" cy="140" r="10" fill="#FFFFFF" opacity="0.95"/>
+                    <circle cx="220" cy="133" r="8" fill="#FFFFFF" opacity="0.95"/>
+                    <circle cx="168" cy="138" r="6" fill="#FFFFFF" opacity="0.85"/>
+                    <circle cx="228" cy="140" r="7" fill="#FFFFFF" opacity="0.85"/>
+                    <circle cx="196" cy="148" r="8" fill="#FFFFFF" opacity="0.9"/>
+                    
+                    <!-- Sparkling Clean Teeth Sparkles -->
+                    <path d="M 152 95 L 157 102 L 152 109 L 147 102 Z" fill="#FFD700"/>
+                    <path d="M 245 95 L 250 102 L 245 109 L 240 102 Z" fill="#FFD700"/>
+                    <path d="M 230 148 L 234 153 L 230 158 L 226 153 Z" fill="#48DBFB"/>
+                    <path d="M 160 150 L 163 154 L 160 158 L 157 154 Z" fill="#48DBFB"/>
+                </svg>`
+            },
+            2: {
+                title: "RAHSIA KOTAK 2",
+                question: "Apakah perbuatan yang ditunjukkan dalam gambar ini?",
+                answer: "Mencuci Tangan",
+                speechQuestion: "Apakah perbuatan yang ditunjukkan dalam gambar ini?",
+                speechAnswer: "Jawapannya ialah, mencuci tangan!",
+                svg: `
+                <svg class="w-full h-full" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="bgTangan" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E8F5E9"/><stop offset="100%" stop-color="#C8E6C9"/></linearGradient>
+                        <linearGradient id="waterStream" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00CEC9" opacity="0.8"/><stop offset="100%" stop-color="#74B9FF" opacity="0.6"/></linearGradient>
+                        <linearGradient id="handSkin" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFDFC4"/><stop offset="100%" stop-color="#F0C097"/></linearGradient>
+                    </defs>
+                    <!-- Background Sink Area -->
+                    <rect width="400" height="260" rx="20" fill="url(#bgTangan)"/>
+                    
+                    <!-- Ceramic Wash Basin Sink -->
+                    <ellipse cx="200" cy="220" rx="170" ry="35" fill="#B0BEC5"/>
+                    <ellipse cx="200" cy="216" rx="165" ry="32" fill="#FFFFFF"/>
+                    <ellipse cx="200" cy="222" rx="25" ry="7" fill="#90A4AE"/>
+                    <!-- Sink Drain Holes -->
+                    <circle cx="200" cy="222" r="3" fill="#37474F"/>
+                    
+                    <!-- Metallic Water Tap (Faucet) -->
+                    <path d="M 200 15 L 200 65 Q 200 95 160 95 L 145 95" stroke="#78909C" stroke-width="22" stroke-linecap="round" fill="none"/>
+                    <path d="M 200 15 L 200 65 Q 200 95 160 95 L 145 95" stroke="#CFD8DC" stroke-width="14" stroke-linecap="round" fill="none"/>
+                    <!-- Faucet Base & Handle -->
+                    <rect x="182" y="10" width="36" height="15" rx="4" fill="#546E7A"/>
+                    <path d="M 175 18 L 225 18" stroke="#37474F" stroke-width="6" stroke-linecap="round"/>
+                    <!-- Faucet Nozzle Tip -->
+                    <rect x="140" y="86" width="12" height="18" rx="3" fill="#455A64"/>
+                    
+                    <!-- Gushing Water Stream -->
+                    <path d="M 145 100 Q 143 145 145 190 Q 147 210 145 220" stroke="url(#waterStream)" stroke-width="20" fill="none" stroke-linecap="round"/>
+                    <path d="M 145 100 Q 143 145 145 190 Q 147 210 145 220" stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.7"/>
+                    
+                    <!-- Water Splash Lines at Drain -->
+                    <path d="M 130 205 Q 120 195 115 200" stroke="#74B9FF" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <path d="M 160 205 Q 170 195 175 200" stroke="#74B9FF" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    
+                    <!-- Left Hand -->
+                    <g transform="translate(10, -5)">
+                        <!-- Forearm -->
+                        <path d="M 30 195 L 115 160" stroke="url(#handSkin)" stroke-width="28" stroke-linecap="round"/>
+                        <!-- Palm & Wrist -->
+                        <ellipse cx="125" cy="155" rx="22" ry="18" fill="url(#handSkin)" transform="rotate(-15 125 155)"/>
+                        <!-- Fingers scrubbing -->
+                        <rect x="135" y="138" width="28" height="10" rx="5" fill="url(#handSkin)" transform="rotate(5 135 138)"/>
+                        <rect x="138" y="150" width="30" height="10" rx="5" fill="url(#handSkin)" transform="rotate(10 138 150)"/>
+                        <rect x="135" y="162" width="26" height="9" rx="4.5" fill="url(#handSkin)" transform="rotate(15 135 162)"/>
+                        <rect x="125" y="172" width="22" height="8" rx="4" fill="url(#handSkin)" transform="rotate(20 125 172)"/>
+                        <!-- Thumb -->
+                        <rect x="115" y="132" width="22" height="9" rx="4.5" fill="url(#handSkin)" transform="rotate(-35 115 132)"/>
+                    </g>
+                    
+                    <!-- Right Hand (Scrubbing over Left Hand) -->
+                    <g transform="translate(45, 0)">
+                        <!-- Forearm -->
+                        <path d="M 280 195 L 180 162" stroke="url(#handSkin)" stroke-width="26" stroke-linecap="round"/>
+                        <!-- Palm -->
+                        <ellipse cx="165" cy="158" rx="22" ry="18" fill="url(#handSkin)" transform="rotate(15 165 158)"/>
+                        <!-- Fingers -->
+                        <rect x="125" y="145" width="30" height="10" rx="5" fill="url(#handSkin)" transform="rotate(-5 125 145)"/>
+                        <rect x="122" y="157" width="32" height="10" rx="5" fill="url(#handSkin)" transform="rotate(-10 122 157)"/>
+                        <rect x="126" y="168" width="28" height="9" rx="4.5" fill="url(#handSkin)" transform="rotate(-15 126 168)"/>
+                        <!-- Thumb -->
+                        <rect x="155" y="135" width="22" height="9" rx="4.5" fill="url(#handSkin)" transform="rotate(30 155 135)"/>
+                    </g>
+                    
+                    <!-- Soap Bottle on Sink -->
+                    <rect x="310" y="125" width="45" height="65" rx="12" fill="#FF7675"/>
+                    <rect x="320" y="140" width="25" height="35" rx="4" fill="#FFFFFF" opacity="0.8"/>
+                    <text x="324" y="162" font-size="9" font-weight="bold" fill="#D63031">SABUN</text>
+                    <!-- Dispenser Pump -->
+                    <rect x="326" y="112" width="13" height="14" fill="#BDC3C7"/>
+                    <path d="M 332 112 L 332 102 L 310 102 L 310 109 Z" fill="#7F8C8D"/>
+                    
+                    <!-- Rich Soap Bubbles & Foam Everywhere on Hands -->
+                    <circle cx="140" cy="148" r="14" fill="#FFFFFF" opacity="0.95"/>
+                    <circle cx="160" cy="142" r="16" fill="#FFFFFF" opacity="0.95"/>
+                    <circle cx="175" cy="155" r="13" fill="#FFFFFF" opacity="0.95"/>
+                    <circle cx="150" cy="168" r="15" fill="#FFFFFF" opacity="0.95"/>
+                    <circle cx="130" cy="160" r="11" fill="#FFFFFF" opacity="0.95"/>
+                    <circle cx="170" cy="172" r="10" fill="#FFFFFF" opacity="0.9"/>
+                    
+                    <!-- Floating Iridescent Soap Bubbles -->
+                    <circle cx="105" cy="120" r="12" fill="none" stroke="#74B9FF" stroke-width="2" opacity="0.8"/>
+                    <path d="M 99 114 Q 104 112 109 116" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" fill="none"/>
+                    
+                    <circle cx="215" cy="125" r="16" fill="none" stroke="#74B9FF" stroke-width="2" opacity="0.8"/>
+                    <path d="M 207 117 Q 214 114 220 120" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                    
+                    <circle cx="240" cy="90" r="10" fill="none" stroke="#FF7675" stroke-width="1.5" opacity="0.7"/>
+                    <circle cx="85" cy="95" r="8" fill="none" stroke="#55E6C1" stroke-width="1.5" opacity="0.7"/>
+                    <circle cx="180" cy="85" r="7" fill="none" stroke="#74B9FF" stroke-width="1.5" opacity="0.8"/>
+                    
+                    <!-- Clean Water Droplets -->
+                    <path d="M 130 110 Q 130 120 127 122 Q 124 120 124 110 Q 127 104 130 110 Z" fill="#74B9FF"/>
+                    <path d="M 210 105 Q 210 113 208 115 Q 205 113 205 105 Q 208 100 210 105 Z" fill="#74B9FF"/>
+                </svg>`
+            },
+            3: {
+                title: "RAHSIA KOTAK 3",
+                question: "Apakah aktiviti yang ditunjukkan dalam gambar ini?",
+                answer: "Aktiviti bersenam",
+                speechQuestion: "Apakah aktiviti yang ditunjukkan dalam gambar ini?",
+                speechAnswer: "Jawapannya ialah, aktiviti bersenam!",
+                svg: `
+                <svg class="w-full h-full" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="bgSenam" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#81ECEC"/><stop offset="60%" stop-color="#74B9FF"/><stop offset="100%" stop-color="#A8E6CF"/></linearGradient>
+                        <linearGradient id="sunGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFEAA7"/><stop offset="100%" stop-color="#FDCB6E"/></linearGradient>
+                        <linearGradient id="childSkin" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFDFC4"/><stop offset="100%" stop-color="#F0C097"/></linearGradient>
+                    </defs>
+                    <!-- Sunny Outdoor Sky -->
+                    <rect width="400" height="260" rx="20" fill="url(#bgSenam)"/>
+                    
+                    <!-- Bright Shining Sun -->
+                    <circle cx="340" cy="50" r="32" fill="url(#sunGrad)"/>
+                    <!-- Sun Rays -->
+                    <path d="M 340 8 L 340 0 M 340 92 L 340 100 M 298 50 L 290 50 M 382 50 L 390 50 M 310 20 L 304 14 M 370 80 L 376 86 M 310 80 L 304 86 M 370 20 L 376 14" stroke="#FDCB6E" stroke-width="4" stroke-linecap="round"/>
+                    
+                    <!-- Fluffy White Clouds -->
+                    <path d="M 30 50 Q 45 35 65 42 Q 80 30 98 42 Q 115 40 120 55 Q 125 70 105 72 L 40 72 Q 25 70 30 50 Z" fill="#FFFFFF" opacity="0.9"/>
+                    <path d="M 220 65 Q 232 52 248 58 Q 260 48 275 58 Q 288 55 292 68 Q 298 80 280 82 L 230 82 Q 215 80 220 65 Z" fill="#FFFFFF" opacity="0.85"/>
+                    
+                    <!-- Park Background Hill & Lush Green Grass -->
+                    <path d="M -20 180 Q 120 130 250 165 Q 330 185 420 150 L 420 260 L -20 260 Z" fill="#55E6C1"/>
+                    <path d="M -20 200 Q 100 170 200 190 Q 320 210 420 175 L 420 260 L -20 260 Z" fill="#10AC84"/>
+                    
+                    <!-- Park Trees in Background -->
+                    <!-- Left Tree -->
+                    <rect x="40" y="130" width="16" height="50" rx="4" fill="#6D4C41"/>
+                    <circle cx="48" cy="120" r="30" fill="#2ED573"/>
+                    <circle cx="35" cy="130" r="22" fill="#26DE81"/>
+                    <circle cx="62" cy="125" r="22" fill="#26DE81"/>
+                    <!-- Right Tree -->
+                    <rect x="330" y="120" width="18" height="60" rx="4" fill="#6D4C41"/>
+                    <circle cx="339" cy="105" r="35" fill="#2ED573"/>
+                    <circle cx="320" cy="115" r="25" fill="#26DE81"/>
+                    <circle cx="358" cy="115" r="25" fill="#26DE81"/>
+                    
+                    <!-- Flowers on Grass -->
+                    <circle cx="70" cy="225" r="5" fill="#FF7675"/><circle cx="70" cy="225" r="2" fill="#FFEAA7"/>
+                    <circle cx="110" cy="240" r="5" fill="#FF9FF3"/><circle cx="110" cy="240" r="2" fill="#FFEAA7"/>
+                    <circle cx="290" cy="230" r="5" fill="#FECA57"/><circle cx="290" cy="230" r="2" fill="#FFFFFF"/>
+                    <circle cx="330" cy="220" r="5" fill="#FF7675"/><circle cx="330" cy="220" r="2" fill="#FFEAA7"/>
+                    
+                    <!-- Active Child Doing Jumping Jacks / Exercise -->
+                    <g transform="translate(10, -5)">
+                        <!-- Shadow on Grass -->
+                        <ellipse cx="190" cy="235" rx="45" ry="10" fill="#0E8563" opacity="0.4"/>
+                        
+                        <!-- Left Leg Extended -->
+                        <path d="M 180 165 L 145 225" stroke="#2980B9" stroke-width="18" stroke-linecap="round"/>
+                        <!-- Right Leg Extended -->
+                        <path d="M 200 165 L 235 225" stroke="#2980B9" stroke-width="18" stroke-linecap="round"/>
+                        
+                        <!-- Sport Shoes (Sneakers) -->
+                        <!-- Left Shoe -->
+                        <ellipse cx="140" cy="228" rx="16" ry="8" fill="#E74C3C"/>
+                        <rect x="126" y="226" width="26" height="5" rx="2" fill="#FFFFFF"/>
+                        <!-- Right Shoe -->
+                        <ellipse cx="240" cy="228" rx="16" ry="8" fill="#E74C3C"/>
+                        <rect x="228" y="226" width="26" height="5" rx="2" fill="#FFFFFF"/>
+                        
+                        <!-- Sport Shorts -->
+                        <path d="M 168 150 L 212 150 L 220 175 L 190 175 L 190 170 L 160 175 Z" fill="#34495E"/>
+                        
+                        <!-- Torso / Sport T-Shirt -->
+                        <path d="M 168 105 L 212 105 L 218 155 L 162 155 Z" fill="#FF9F43"/>
+                        <!-- Shirt Stripe -->
+                        <rect x="163" y="125" width="54" height="10" fill="#FECA57"/>
+                        <!-- Number on Shirt -->
+                        <text x="184" y="145" font-size="14" font-weight="black" fill="#FFFFFF">1</text>
+                        
+                        <!-- Left Arm Raised Up in Exercise -->
+                        <path d="M 170 110 L 130 65" stroke="#FF9F43" stroke-width="14" stroke-linecap="round"/>
+                        <circle cx="126" cy="60" r="9" fill="url(#childSkin)"/>
+                        
+                        <!-- Right Arm Raised Up in Exercise -->
+                        <path d="M 210 110 L 250 65" stroke="#FF9F43" stroke-width="14" stroke-linecap="round"/>
+                        <circle cx="254" cy="60" r="9" fill="url(#childSkin)"/>
+                        
+                        <!-- Head & Neck -->
+                        <rect x="183" y="92" width="14" height="16" fill="url(#childSkin)"/>
+                        <circle cx="190" cy="72" r="28" fill="url(#childSkin)"/>
+                        
+                        <!-- Headband -->
+                        <path d="M 163 62 Q 190 52 217 62" stroke="#E74C3C" stroke-width="8" stroke-linecap="round" fill="none"/>
+                        
+                        <!-- Hair -->
+                        <path d="M 163 65 C 160 38, 220 38, 217 65 C 205 48, 175 48, 163 65 Z" fill="#2C3E50"/>
+                        
+                        <!-- Face Features -->
+                        <!-- Eyes (Winking / Joyful Exercise) -->
+                        <path d="M 174 72 Q 180 66 184 72" stroke="#2C3E50" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <path d="M 196 72 Q 202 66 208 72" stroke="#2C3E50" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <!-- Happy Smile -->
+                        <path d="M 180 80 Q 190 92 200 80 Z" fill="#C0392B"/>
+                        <!-- Rosy Cheeks -->
+                        <circle cx="172" cy="78" r="4" fill="#FF7675" opacity="0.6"/>
+                        <circle cx="208" cy="78" r="4" fill="#FF7675" opacity="0.6"/>
+                        
+                        <!-- Sweat Drops / Energy Motion Lines -->
+                        <path d="M 220 50 Q 224 42 226 48 Q 224 52 220 50 Z" fill="#74B9FF"/>
+                        <path d="M 110 50 L 100 45 M 105 60 L 95 60" stroke="#FECA57" stroke-width="3" stroke-linecap="round"/>
+                        <path d="M 270 50 L 280 45 M 275 60 L 285 60" stroke="#FECA57" stroke-width="3" stroke-linecap="round"/>
+                    </g>
+                </svg>`
+            },
+            4: {
+                title: "RAHSIA KOTAK 4",
+                question: "Apakah makanan berkhasiat yang terdapat di dalam pinggan ini?",
+                answer: "Makan Buah-buahan",
+                speechQuestion: "Apakah makanan berkhasiat yang terdapat di dalam pinggan ini?",
+                speechAnswer: "Jawapannya ialah, makan buah-buahan!",
+                svg: `
+                <svg class="w-full h-full" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="bgBuah" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3E5F5"/><stop offset="100%" stop-color="#E1BEE7"/></linearGradient>
+                        <linearGradient id="tableWood" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#E5A663"/><stop offset="100%" stop-color="#D38C43"/></linearGradient>
+                        <linearGradient id="appleGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FF7675"/><stop offset="100%" stop-color="#D63031"/></linearGradient>
+                        <linearGradient id="orangeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FDCB6E"/><stop offset="100%" stop-color="#E17055"/></linearGradient>
+                        <linearGradient id="kidSkin" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFDFC4"/><stop offset="100%" stop-color="#F0C097"/></linearGradient>
+                    </defs>
+                    <!-- Background Dining Room Wall -->
+                    <rect width="400" height="260" rx="20" fill="url(#bgBuah)"/>
+                    
+                    <!-- Dining Table Surface -->
+                    <rect x="0" y="160" width="400" height="100" fill="url(#tableWood)"/>
+                    <rect x="0" y="160" width="400" height="12" fill="#F7D794"/>
+                    <!-- Tablecloth Runner -->
+                    <rect x="60" y="160" width="280" height="100" fill="#FFFFFF" opacity="0.9"/>
+                    <path d="M 60 160 L 60 260 M 340 160 L 340 260" stroke="#E1BEE7" stroke-width="4" stroke-dasharray="8,6"/>
+                    
+                    <!-- Large Fruit Bowl / Basket -->
+                    <ellipse cx="250" cy="180" rx="105" ry="32" fill="#BDC3C7"/>
+                    <ellipse cx="250" cy="176" rx="100" ry="28" fill="#FFFFFF"/>
+                    
+                    <!-- FRUITS IN BOWL -->
+                    <!-- Green & Purple Grapes Cluster -->
+                    <circle cx="175" cy="165" r="10" fill="#6C5CE7"/>
+                    <circle cx="185" cy="172" r="9" fill="#A29BFE"/>
+                    <circle cx="168" cy="175" r="9" fill="#6C5CE7"/>
+                    <circle cx="178" cy="182" r="8" fill="#A29BFE"/>
+                    <circle cx="190" cy="162" r="8" fill="#55E6C1"/>
+                    <circle cx="198" cy="170" r="8" fill="#10AC84"/>
+                    
+                    <!-- Bananas -->
+                    <path d="M 210 168 Q 250 120 290 155 Q 250 145 210 168 Z" fill="#FFEAA7" stroke="#FDCB6E" stroke-width="2"/>
+                    <path d="M 220 174 Q 260 128 300 160 Q 260 152 220 174 Z" fill="#FDCB6E" stroke="#E17055" stroke-width="1.5"/>
+                    <path d="M 290 155 L 296 152" stroke="#6D4C41" stroke-width="4" stroke-linecap="round"/>
+                    
+                    <!-- Fresh Oranges -->
+                    <circle cx="240" cy="165" r="18" fill="url(#orangeGrad)"/>
+                    <circle cx="236" cy="160" r="3" fill="#FFEAA7" opacity="0.6"/>
+                    <circle cx="282" cy="168" r="16" fill="url(#orangeGrad)"/>
+                    <path d="M 282 152 L 282 148" stroke="#6D4C41" stroke-width="2"/>
+                    <path d="M 282 148 Q 288 145 290 150 Z" fill="#2ED573"/>
+                    
+                    <!-- Red Apple in Bowl -->
+                    <circle cx="210" cy="160" r="17" fill="url(#appleGrad)"/>
+                    <path d="M 210 143 L 210 138" stroke="#5D4037" stroke-width="2"/>
+                    <path d="M 210 140 Q 216 136 218 142 Z" fill="#2ED573"/>
+                    
+                    <!-- Watermelon Slice in Bowl -->
+                    <path d="M 290 175 L 330 140 L 335 180 Z" fill="#FF7675"/>
+                    <path d="M 330 140 L 335 180" stroke="#2ED573" stroke-width="6"/>
+                    <!-- Watermelon Seeds -->
+                    <circle cx="305" cy="165" r="1.5" fill="#2C3E50"/>
+                    <circle cx="318" cy="160" r="1.5" fill="#2C3E50"/>
+                    <circle cx="315" cy="172" r="1.5" fill="#2C3E50"/>
+                    
+                    <!-- Front Rim of Bowl overlapping fruits -->
+                    <path d="M 150 176 A 100 28 0 0 0 350 176" fill="none" stroke="#DFE6E9" stroke-width="6"/>
+                    
+                    <!-- Child Behind Table Happily Eating an Apple -->
+                    <!-- Body / Shirt -->
+                    <path d="M 50 210 Q 50 135 110 135 Q 170 135 170 210 Z" fill="#74B9FF"/>
+                    <!-- Head -->
+                    <circle cx="110" cy="95" r="36" fill="url(#kidSkin)"/>
+                    <!-- Hair -->
+                    <path d="M 74 90 C 70 50, 150 50, 146 90 C 135 65, 85 65, 74 90 Z" fill="#6D4C41"/>
+                    
+                    <!-- Face Features -->
+                    <!-- Eyes looking at Apple -->
+                    <ellipse cx="98" cy="90" rx="4.5" ry="6" fill="#2C3E50"/>
+                    <ellipse cx="122" cy="90" rx="4.5" ry="6" fill="#2C3E50"/>
+                    <circle cx="96" cy="88" r="1.5" fill="#FFFFFF"/>
+                    <circle cx="120" cy="88" r="1.5" fill="#FFFFFF"/>
+                    <!-- Joyful Eyebrows -->
+                    <path d="M 92 80 Q 98 76 104 80" stroke="#5D4037" stroke-width="2.5" fill="none"/>
+                    <path d="M 116 80 Q 122 76 128 80" stroke="#5D4037" stroke-width="2.5" fill="none"/>
+                    <!-- Cheeks -->
+                    <circle cx="88" cy="100" r="6" fill="#FF7675" opacity="0.5"/>
+                    <circle cx="132" cy="100" r="6" fill="#FF7675" opacity="0.5"/>
+                    
+                    <!-- Open Happy Mouth taking a bite -->
+                    <path d="M 100 102 Q 110 118 120 102 Z" fill="#C0392B"/>
+                    
+                    <!-- Hand Holding Red Apple up to Mouth -->
+                    <!-- Arm -->
+                    <path d="M 70 160 L 115 125" stroke="url(#kidSkin)" stroke-width="16" stroke-linecap="round"/>
+                    <!-- Hand -->
+                    <circle cx="120" cy="120" r="10" fill="url(#kidSkin)"/>
+                    <!-- Apple Being Eaten with a Bite Mark -->
+                    <circle cx="130" cy="110" r="15" fill="url(#appleGrad)"/>
+                    <!-- Bite Mark Out of Apple -->
+                    <circle cx="120" cy="105" r="6" fill="url(#kidSkin)"/>
+                    <!-- Apple Stem & Leaf -->
+                    <path d="M 132 95 L 134 90" stroke="#5D4037" stroke-width="2"/>
+                    <path d="M 134 90 Q 140 88 140 93 Z" fill="#2ED573"/>
+                    
+                    <!-- Sparkles of Health & Yum -->
+                    <path d="M 148 75 L 152 80 L 148 85 L 144 80 Z" fill="#FDCB6E"/>
+                    <path d="M 60 70 L 63 74 L 60 78 L 57 74 Z" fill="#FDCB6E"/>
+                </svg>`
+            },
+            5: {
+                title: "RAHSIA KOTAK 5",
+                question: "Apakah minuman sihat yang penting untuk badan kita?",
+                answer: "Air Kosong",
+                speechQuestion: "Apakah minuman sihat yang penting untuk badan kita?",
+                speechAnswer: "Jawapannya ialah, air kosong!",
+                svg: `
+                <svg class="w-full h-full" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="bgAir" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E1F5FE"/><stop offset="100%" stop-color="#B3E5FC"/></linearGradient>
+                        <linearGradient id="clearWater" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#81D4FA" opacity="0.7"/><stop offset="100%" stop-color="#29B6F6" opacity="0.85"/></linearGradient>
+                        <linearGradient id="childSkin2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFDFC4"/><stop offset="100%" stop-color="#F0C097"/></linearGradient>
+                    </defs>
+                    <!-- Background Bright Room -->
+                    <rect width="400" height="260" rx="20" fill="url(#bgAir)"/>
+                    
+                    <!-- Table Surface -->
+                    <rect x="0" y="170" width="400" height="90" fill="#81D4FA" opacity="0.3"/>
+                    <line x1="0" y1="170" x2="400" y2="170" stroke="#4FC3F7" stroke-width="4"/>
+                    
+                    <!-- Water Pitcher / Jug on Table -->
+                    <g transform="translate(260, 80)">
+                        <!-- Jug Body -->
+                        <path d="M 20 40 L 70 40 L 75 110 C 75 118, 15 118, 15 110 Z" fill="rgba(255, 255, 255, 0.6)" stroke="#4FC3F7" stroke-width="4"/>
+                        <!-- Water inside Jug -->
+                        <path d="M 21 60 L 69 60 L 73 108 C 73 115, 17 115, 17 108 Z" fill="url(#clearWater)"/>
+                        <!-- Water Surface Line & Bubbles -->
+                        <ellipse cx="45" cy="60" rx="24" ry="4" fill="#B3E5FC"/>
+                        <circle cx="35" cy="85" r="3" fill="#FFFFFF" opacity="0.8"/>
+                        <circle cx="50" cy="95" r="4" fill="#FFFFFF" opacity="0.8"/>
+                        <!-- Jug Handle -->
+                        <path d="M 70 50 C 95 50, 95 100, 73 100" fill="none" stroke="#4FC3F7" stroke-width="6" stroke-linecap="round"/>
+                        <!-- Jug Spout -->
+                        <path d="M 20 40 L 10 35 L 20 48 Z" fill="#4FC3F7"/>
+                        <!-- Lid -->
+                        <rect x="18" y="32" width="54" height="10" rx="3" fill="#0288D1"/>
+                    </g>
+                    
+                    <!-- Child Drinking Water -->
+                    <!-- Body / Shirt -->
+                    <path d="M 30 220 C 30 150, 170 150, 170 220 Z" fill="#26DE81"/>
+                    <!-- Head & Neck -->
+                    <rect x="88" y="125" width="24" height="20" fill="url(#childSkin2)"/>
+                    <circle cx="100" cy="90" r="40" fill="url(#childSkin2)"/>
+                    
+                    <!-- Hair -->
+                    <path d="M 60 85 C 55 40, 145 40, 140 85 C 125 55, 75 55, 60 85 Z" fill="#2C3E50"/>
+                    
+                    <!-- Eyes Closed with Satisfaction / Refreshment -->
+                    <path d="M 75 88 Q 83 95 91 88" stroke="#2C3E50" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                    <path d="M 109 88 Q 117 95 125 88" stroke="#2C3E50" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                    <!-- Eyebrows -->
+                    <path d="M 73 78 Q 82 72 90 78" stroke="#2C3E50" stroke-width="2.5" fill="none"/>
+                    <path d="M 110 78 Q 118 72 127 78" stroke="#2C3E50" stroke-width="2.5" fill="none"/>
+                    <!-- Rosy Blush Cheeks -->
+                    <circle cx="70" cy="98" r="6" fill="#FF7675" opacity="0.5"/>
+                    <circle cx="130" cy="98" r="6" fill="#FF7675" opacity="0.5"/>
+                    
+                    <!-- Hands Holding Big Transparent Glass -->
+                    <!-- Left & Right Hands -->
+                    <circle cx="118" cy="132" r="9" fill="url(#childSkin2)"/>
+                    <circle cx="152" cy="132" r="9" fill="url(#childSkin2)"/>
+                    
+                    <!-- Big Transparent Glass of Water -->
+                    <!-- Glass Outline -->
+                    <polygon points="120,98 165,98 155,165 130,165" fill="rgba(255, 255, 255, 0.65)" stroke="#29B6F6" stroke-width="4"/>
+                    <!-- Water inside Glass -->
+                    <polygon points="122,112 163,112 154,163 131,163" fill="url(#clearWater)"/>
+                    <!-- Water Level Ripple -->
+                    <ellipse cx="142.5" cy="112" rx="20.5" ry="4" fill="#E0F7FA"/>
+                    
+                    <!-- Drinking Straw -->
+                    <path d="M 98 96 L 135 70 L 140 78 L 145 150" stroke="#FF7675" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M 98 96 L 135 70 L 140 78 L 145 150" stroke="#FFFFFF" stroke-dasharray="4,4" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    
+                    <!-- Refreshing Bubbles Rising in Glass -->
+                    <circle cx="138" cy="145" r="3" fill="#FFFFFF" opacity="0.9"/>
+                    <circle cx="148" cy="135" r="2.5" fill="#FFFFFF" opacity="0.9"/>
+                    <circle cx="141" cy="125" r="3.5" fill="#FFFFFF" opacity="0.9"/>
+                    <circle cx="152" cy="120" r="2" fill="#FFFFFF" opacity="0.9"/>
+                    
+                    <!-- Ahh Refreshing Sparkles around Child -->
+                    <path d="M 160 65 L 164 70 L 160 75 L 156 70 Z" fill="#29B6F6"/>
+                    <path d="M 45 75 L 49 80 L 45 85 L 41 80 Z" fill="#29B6F6"/>
+                    <path d="M 175 90 L 180 96 L 175 102 L 170 96 Z" fill="#FDCB6E"/>
+                </svg>`
+            }
+        };
+
+        // State Tracking
+        let openedBoxes = new Set();
+        let currentActiveBox = null;
+        let isBGMOn = false;
+        let isTTSOn = true;
+        let audioCtx = null;
+
+        // Initialize Background Particles
+        function initParticles() {
+            const container = document.getElementById('particle-container');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'bg-particle';
+                const size = Math.random() * 15 + 8;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.animationDelay = `${Math.random() * 6}s`;
+                particle.style.animationDuration = `${Math.random() * 6 + 6}s`;
+                container.appendChild(particle);
+            }
+        }
+
+        // Web Audio API Sound Effects Synthesizer
+        function playSound(type) {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'magic') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                    osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                } else if (type === 'fanfare') {
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(554.37, now + 0.15);
+                    osc.frequency.setValueAtTime(659.25, now + 0.3);
+                    osc.frequency.setValueAtTime(880, now + 0.45);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
+                    osc.start(now);
+                    osc.stop(now + 0.8);
+                }
+            } catch (e) {
+                console.log("Audio not allowed yet");
+            }
+        }
+
+        // Web Speech Synthesis (Malay TTS) with Star Mouth Motion Sync
+        function speakText(text) {
+            document.getElementById('subtitle-text').innerText = text;
+
+            if (!isTTSOn || !('speechSynthesis' in window)) return;
+
+            window.speechSynthesis.cancel(); // Stop ongoing speech
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ms-MY';
+            utterance.rate = 0.9;
+            utterance.pitch = 1.2;
+
+            const mouth = document.getElementById('star-mouth');
+
+            utterance.onstart = () => {
+                if (mouth) mouth.classList.add('speaking-mouth');
+            };
+
+            utterance.onend = () => {
+                if (mouth) mouth.classList.remove('speaking-mouth');
+            };
+
+            utterance.onerror = () => {
+                if (mouth) mouth.classList.remove('speaking-mouth');
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // BGM Control Simulator
+        function toggleBGM() {
+            isBGMOn = !isBGMOn;
+            const btn = document.getElementById('btn-bgm');
+            if (isBGMOn) {
+                btn.classList.replace('bg-amber-400', 'bg-emerald-500');
+                playSound('magic');
+                speakText("Muzik latar diaktifkan!");
+            } else {
+                btn.classList.replace('bg-emerald-500', 'bg-amber-400');
+                speakText("Muzik latar dimatikan.");
+            }
+        }
+
+        function toggleTTS() {
+            isTTSOn = !isTTSOn;
+            const btn = document.getElementById('btn-tts');
+            if (isTTSOn) {
+                btn.classList.replace('bg-gray-400', 'bg-sky-400');
+                speakText("Suara panduan diaktifkan!");
+            } else {
+                btn.classList.replace('bg-sky-400', 'bg-gray-400');
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        // Navigation & Flow Logic
+        function startAdventure() {
+            playSound('magic');
+            showScreen('screen-2');
+            speakText("Sila pilih satu daripada 5 Kotak Ajaib di bawah untuk melihat rahsianya!");
+        }
+
+        function showScreen(screenId) {
+            ['screen-1', 'screen-2', 'screen-3', 'screen-4'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+                document.getElementById(id).classList.remove('flex');
+            });
+            const active = document.getElementById(screenId);
+            active.classList.remove('hidden');
+            active.classList.add('flex');
+        }
+
+        function openBoxDetail(boxIndex) {
+            playSound('click');
+            currentActiveBox = boxIndex;
+            const data = habitData[boxIndex];
+
+            // Set Title & SVG Illustration
+            document.getElementById('detail-box-title').innerText = data.title;
+            document.getElementById('illustration-container').innerHTML = data.svg;
+
+            // Reset Answer Display state
+            document.getElementById('answer-box').classList.add('hidden');
+            document.getElementById('btn-show-answer').classList.remove('hidden');
+            document.getElementById('btn-speak-answer').classList.add('hidden');
+            document.getElementById('answer-text').innerText = data.answer;
+
+            showScreen('screen-3');
+
+            // Auto Speak Question
+            setTimeout(() => {
+                speakText(data.speechQuestion);
+            }, 300);
+
+            // Mark as opened
+            openedBoxes.add(boxIndex);
+            updateProgress();
+        }
+
+        function speakQuestion() {
+            playSound('click');
+            if (currentActiveBox) {
+                speakText(habitData[currentActiveBox].speechQuestion);
+            }
+        }
+
+        function revealAnswer() {
+            playSound('magic');
+            document.getElementById('answer-box').classList.remove('hidden');
+            document.getElementById('btn-show-answer').classList.add('hidden');
+            document.getElementById('btn-speak-answer').classList.remove('hidden');
+            document.getElementById('btn-speak-answer').classList.add('flex');
+
+            speakAnswer();
+        }
+
+        function speakAnswer() {
+            playSound('click');
+            if (currentActiveBox) {
+                speakText(habitData[currentActiveBox].speechAnswer);
+            }
+        }
+
+        function backToGrid() {
+            playSound('click');
+            showScreen('screen-2');
+
+            if (openedBoxes.size === 5) {
+                document.getElementById('btn-reveal-finale').classList.remove('hidden');
+                speakText("Syabas! Semua kotak telah dibuka! Tekan butang Rahsia Terbongkar!");
+            } else {
+                speakText(`Anda telah membuka ${openedBoxes.size} daripada 5 kotak. Sila pilih kotak seterusnya!`);
+            }
+        }
+
+        function updateProgress() {
+            const count = openedBoxes.size;
+            const percent = (count / 5) * 100;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+            document.getElementById('progress-text').innerText = `${count}/5 Kotak`;
+
+            // Display badge on opened boxes
+            openedBoxes.forEach(num => {
+                const badge = document.getElementById(`badge-${num}`);
+                if (badge) badge.classList.remove('hidden');
+            });
+        }
+
+        function goToFinale() {
+            playSound('fanfare');
+            showScreen('screen-4');
+            createConfetti();
+            speakText("Tahniah! Rahsia telah terbongkar! Tajuk pelajaran kita hari ini ialah: SIHAT DAN GEMBIRA!");
+        }
+
+        function restartApp() {
+            playSound('click');
+            openedBoxes.clear();
+            currentActiveBox = null;
+            updateProgress();
+
+            // Hide all badges
+            for (let i = 1; i <= 5; i++) {
+                const badge = document.getElementById(`badge-${i}`);
+                if (badge) badge.classList.add('hidden');
+            }
+            document.getElementById('btn-reveal-finale').classList.add('hidden');
+
+            showScreen('screen-1');
+            speakText("Selamat datang semula! Mari kita bermula sekali lagi!");
+        }
+
+        // Fun Confetti Effect for Finale
+        function createConfetti() {
+            const colors = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
+            for (let i = 0; i < 40; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti-piece';
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = `${Math.random() * 2}s`;
+                document.body.appendChild(confetti);
+
+                setTimeout(() => confetti.remove(), 4000);
+            }
+        }
+
+        // Window Load Initialization
+        window.onload = function() {
+            initParticles();
+            speakText("Selamat datang! Mari kita terokai Kotak Ajaib Sihat dan Gembira bersama-sama!");
+        };
+    </script>
+</body>
+</html>
+```
